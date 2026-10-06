@@ -1,20 +1,280 @@
-body {
-  font-family: system-ui, sans-serif;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 24px;
+/* ---------- 1. Variables and reset ---------- */
+:root {
+  --bg: #0d0f2b;
+  --card: #1a1b45;
+  --text: #e8e8ff;
+  --muted: #9a9cc9;
+  --accent: #7c4dff;
+  --teal: #2bb3b1;
 }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  padding: 60px 24px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+header, #status, main { position: relative; z-index: 1; }
+
+/* ---------- 2. Floating background blobs ---------- */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  border-radius: 50%;
+  z-index: -1;
+  filter: blur(40px);
+  pointer-events: none;
+}
+body::before {
+  width: 500px; height: 500px;
+  top: -150px; left: -150px;
+  background: radial-gradient(circle, rgba(124, 77, 255, 0.4), transparent 70%);
+  animation: floatA 14s ease-in-out infinite alternate;
+}
+body::after {
+  width: 450px; height: 450px;
+  bottom: -150px; right: -120px;
+  background: radial-gradient(circle, rgba(43, 179, 177, 0.3), transparent 70%);
+  animation: floatB 18s ease-in-out infinite alternate;
+}
+@keyframes floatA { to { transform: translate(200px, 150px); } }
+@keyframes floatB { to { transform: translate(-220px, -120px); } }
+
+/* ---------- 3. Cursor glow ---------- */
+.cursor-glow {
+  position: fixed;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 77, 255, 0.18), transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---------- 4. Header ---------- */
+header { text-align: center; margin-bottom: 40px; }
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes flow { to { background-position: 200% center; } }
+
+h1 {
+  font-size: 3rem;
+  background: linear-gradient(90deg, var(--accent), var(--teal), var(--accent));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* two animations on one element, separated by a comma */
+  animation: fadeDown 0.8s ease-out backwards,
+             flow 4s linear infinite;
+}
+
+.dot {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--teal));
+  margin-right: 12px;
+  vertical-align: middle;
+  animation: dotBounce 1.2s ease-in-out infinite;
+}
+@keyframes dotBounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+
+.tagline {
+  color: var(--muted);
+  margin: 12px 0 28px;
+  font-size: 1.1rem;
+  animation: fadeDown 0.8s 0.15s ease-out backwards;
+}
+
+/* ---------- 5. Search form ---------- */
 #search-form {
   display: flex;
-  gap: 10px;
-  margin: 20px 0;
+  justify-content: center;
+  gap: 12px;
+  animation: fadeDown 0.8s 0.3s ease-out backwards;
 }
-#search-input {
-  flex: 1;
-  padding: 12px 16px;
+
+#query {
+  width: 100%;
+  max-width: 620px;
+  padding: 16px 22px;
+  border-radius: 999px;
+  border: 2px solid var(--accent);
+  background: #15163a;
+  color: var(--text);
+  font-size: 1.1rem;
+  outline: none;
+  transition: box-shadow 0.3s, transform 0.3s;
 }
-#results {
+#query:focus {
+  box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.3),
+              0 0 30px rgba(124, 77, 255, 0.5);
+  transform: scale(1.02);
+}
+
+button {
+  position: relative;
+  overflow: hidden;
+  padding: 0 32px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s;
+}
+button:hover  { transform: scale(1.08); filter: brightness(1.15); }
+button:active { transform: scale(0.94); }
+
+/* ripple created by JavaScript on click */
+.ripple {
+  position: absolute;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple 0.6s ease-out;
+  pointer-events: none;
+}
+@keyframes ripple {
+  to { transform: translate(-50%, -50%) scale(14); opacity: 0; }
+}
+
+/* ---------- 6. Status text ---------- */
+#status {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 28px;
+  min-height: 1.4em;
+}
+
+/* ---------- 7. Grid ---------- */
+.grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  max-width: 1350px;
+  margin: 0 auto;
+}
+
+/* ---------- 8. Cards ---------- */
+@keyframes bounceIn {
+  0%   { opacity: 0; transform: translateY(60px) scale(0.8); }
+  60%  { opacity: 1; transform: translateY(-14px) scale(1.04); }
+  80%  { transform: translateY(6px) scale(0.98); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid rgba(124, 77, 255, 0.3);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.15s ease-out, box-shadow 0.3s;
+  animation: bounceIn 0.7s ease-out backwards;
+}
+.card:hover { box-shadow: 0 16px 36px rgba(124, 77, 255, 0.4); }
+
+.card a {
+  position: relative;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: zoom-in;
+  overflow: hidden;
+}
+
+.card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s;
+}
+.card:hover img { transform: scale(1.12); }
+
+/* shine sweep across the card on hover */
+.card a::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -75%;
+  width: 50%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+.card:hover a::after { animation: sweep 0.8s; }
+@keyframes sweep { to { left: 130%; } }
+
+.card-info { padding: 16px; }
+.card-info h3 { font-size: 1rem; margin-bottom: 6px; }
+.card-info p  { color: var(--muted); font-size: 0.9rem; }
+
+/* ---------- 9. Loading skeletons ---------- */
+.skeleton {
+  height: 340px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #1a1b45 25%, #26275c 50%, #1a1b45 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.3s infinite;
+}
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* ---------- 10. Lightbox ---------- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 6, 20, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s;
+  z-index: 100;
+  cursor: zoom-out;
+}
+.lightbox.open { opacity: 1; visibility: visible; }
+
+.lightbox figure {
+  text-align: center;
+  transform: scale(0.6);
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.lightbox.open figure { transform: scale(1); }
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(124, 77, 255, 0.4);
+}
+.lightbox figcaption { margin-top: 14px; color: var(--text); }
+
+/* ---------- 11. Respect "reduce motion" settings ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

@@ -1,23 +1,31 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css">
-    <title>PixelPulse</title>
-  </head>
-  <body>
-    <header>
-      <h1>PixelPulse</h1>
-      <form id="search-form">
-        <input id="search-input" type="search" placeholder="Search images..." />
-        <button type="submit">Search</button>
-      </form>
-    </header>
-    <main>
-      <p id="status"></p>
-      <section id="results"></section>
-    </main>
-    <script src="script.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PixelPulse</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1><span class="dot"></span>PixelPulse</h1>
+    <p class="tagline">Search thousands of artworks and images.</p>
+    <form id="search-form">
+      <input type="text" id="query" placeholder="Try: sunflowers, cats, ocean, Monet…" autocomplete="off">
+      <button type="submit">Search</button>
+    </form>
+  </header>
+
+  <p id="status"></p>
+  <main id="results" class="grid"></main>
+
+  <div id="lightbox" class="lightbox">
+    <figure>
+      <img id="lightbox-img" alt="">
+      <figcaption id="lightbox-caption"></figcaption>
+    </figure>
+  </div>
+
+  <script src="script.js"></script>
+</body>
 </html>
